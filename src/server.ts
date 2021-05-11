@@ -14,7 +14,7 @@
 //   readline.close();
 // });
 
-import { askForMainPassword } from "./utils/question";
+import { askForMainPassword, chooseCommand } from "./utils/question";
 import { isMainPasswordValid } from "./utils/validation";
 
 const start = async () => {
@@ -27,3 +27,14 @@ const start = async () => {
   }
 };
 start();
+
+const command = await chooseCommand();
+
+switch (command) {
+  case "list":
+    console.log("List Case");
+    break;
+  case "add":
+    console.log("Add Case");
+    break;
+}
