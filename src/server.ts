@@ -16,6 +16,7 @@
 
 import { printPassword } from "./utils/messages";
 import {
+  askForCredential,
   askForMainPassword,
   chooseCommand,
   chooseService,
@@ -30,19 +31,21 @@ const start = async () => {
   } else {
     console.log("is Valid");
   }
+  const command = await chooseCommand();
+
+  switch (command) {
+    case "list":
+      {
+        const service = await chooseService(["Github", "Codewars", "Google"]);
+        printPassword(service);
+      }
+      break;
+    case "add":
+      {
+        const newCredential = await askForCredential();
+        console.log(newCredential);
+      }
+      break;
+  }
 };
 start();
-
-const command = await chooseCommand();
-
-switch (command) {
-  case "list":
-    {
-      const service = await chooseService(["Github", "Codewars", "Google"]);
-      printPassword(service);
-    }
-    break;
-  case "add":
-    console.log("Add Case");
-    break;
-}
