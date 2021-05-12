@@ -24,3 +24,12 @@ export const chooseCommand = async (): Promise<Command> => {
   });
   return answers.command;
 };
+export const chooseService = async (services: string[]): Promise<string> => {
+  const answers = await inquirer.prompt<{ service: string }>({
+    type: "list",
+    name: "service",
+    message: "Please choose a service",
+    choices: services,
+  });
+  return answers.service;
+};
