@@ -1,20 +1,4 @@
-// import fs from "fs";
-
-// console.log(fs.readFileSync("./README.md", "utf-8"));
-// const readline = require("readline").createInterface({
-//   input: process.stdin,
-//   output: process.stdout,
-// });
-
-// readline.question(`What's your height?`, (name: string) => {
-//   console.log(`OH ${name}!`);
-// });
-// readline.question(`What's your length?`, (name: string) => {
-//   console.log(`OH ${name}!`);
-//   readline.close();
-// });
-
-import { printPassword } from "./utils/messages";
+// import { printPassword } from "./utils/messages";
 import {
   askForCredential,
   askForMainPassword,
@@ -22,6 +6,7 @@ import {
   chooseService,
 } from "./utils/question";
 import { isMainPasswordValid } from "./utils/validation";
+import { readCredentials } from "./utils/credentials";
 
 const start = async () => {
   const mainPassword = await askForMainPassword();
@@ -36,8 +21,16 @@ const start = async () => {
   switch (command) {
     case "list":
       {
-        const service = await chooseService(["Github", "Codewars", "Google"]);
-        printPassword(service);
+        const credentials = await readCredentials();
+        const credentialServices = credentials.map(
+          (credential) => credential.service
+        );
+        const service = await chooseService(credentialServices);
+        const selectedService = credentials.find(
+          (credential) => credential.service === service
+        );
+        console.log(selectedService);
+        // printPassword(service);
       }
       break;
     case "add":
