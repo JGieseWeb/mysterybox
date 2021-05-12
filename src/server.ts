@@ -14,7 +14,13 @@
 //   readline.close();
 // });
 
-import { askForMainPassword } from "./utils/question";
+import { printPassword } from "./utils/messages";
+import {
+  askForCredential,
+  askForMainPassword,
+  chooseCommand,
+  chooseService,
+} from "./utils/question";
 import { isMainPasswordValid } from "./utils/validation";
 
 const start = async () => {
@@ -24,6 +30,22 @@ const start = async () => {
     start();
   } else {
     console.log("is Valid");
+  }
+  const command = await chooseCommand();
+
+  switch (command) {
+    case "list":
+      {
+        const service = await chooseService(["Github", "Codewars", "Google"]);
+        printPassword(service);
+      }
+      break;
+    case "add":
+      {
+        const newCredential = await askForCredential();
+        console.log(newCredential);
+      }
+      break;
   }
 };
 start();
