@@ -37,7 +37,7 @@ export const askForCredential = async (): Promise<Credential> => {
   const answers = await inquirer.prompt<Credential>([
     {
       type: "text",
-      name: "Service",
+      name: "service",
       message: "Enter a Service ",
     },
     {
