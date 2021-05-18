@@ -1,20 +1,50 @@
-import fs from "fs/promises";
+// import fs from "fs/promises";
+import CryptoJS from "crypto-js";
 import type { Credential } from "../types";
+import { getCredentialsCollection } from "./database";
+import { chooseService } from "./question";
 
-type DB = {
-  credentials: Credential[];
-};
+// type DB = {
+//   credentials: Credential[];
+// };
 
 export const readCredentials = async (): Promise<Credential[]> => {
-  const response = await fs.readFile("./db.json", "utf-8");
-  const data: DB = JSON.parse(response);
-  return data.credentials;
+  return await getCredentialsCollection().find().sort({ service: 1 }).toArray();
+
+  // const response = await fs.readFile("./db.json", "utf-8");
+  // const data: DB = JSON.parse(response);
+  // return data.credentials;
 };
+export const selectCredential = async (): Promise<Credential> => {
+  const credentials = await readCredentials();
+  const credentialServices = credentials.map(
+    (credential) => credential.service
+  );
+  const service = await chooseService(credentialServices);
+  const selectedCredential = credentials.find(
+    (credential) => credential.service === service
+  );
+  if (!selectedCredential) {
+    throw new Error("Can not find credential");
+  }
+  return selectedCredential;
+};
+
+export const deleteCredential = async (
+  credential: Credential
+): Promise<boolean> => {
+  const result = await getCredentialsCollection().deleteOne(credential);
+  if (result.deletedCount === undefined) {
+    return false;
+  }
+  return result.deletedCount > 0;
+};
+
 export const writeCredentials = async (
-  newCredential: Credential
+  credential: Credential
 ): Promise<void> => {
-  const allCredentials = await readCredentials();
-  allCredentials.push(newCredential);
-  const dbJSON = JSON.stringify({ credentials: allCredentials }, null, 2);
-  await fs.writeFile("./db.json", dbJSON);
+  credential.password = CryptoJS.AES.encrypt(
+    credential.password,
+    "passwordHash"
+  ).toString();
 };
