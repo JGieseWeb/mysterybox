@@ -1,5 +1,6 @@
 import fs from "fs/promises";
 import type { Credential } from "../types";
+import { getCollection } from "./database";
 
 type DB = {
   credentials: Credential[];
@@ -11,10 +12,7 @@ export const readCredentials = async (): Promise<Credential[]> => {
   return data.credentials;
 };
 export const writeCredentials = async (
-  newCredential: Credential
+  credential: Credential
 ): Promise<void> => {
-  const allCredentials = await readCredentials();
-  allCredentials.push(newCredential);
-  const dbJSON = JSON.stringify({ credentials: allCredentials }, null, 2);
-  await fs.writeFile("./db.json", dbJSON);
+  await getCollection("credentials").insertOne(credential);
 };

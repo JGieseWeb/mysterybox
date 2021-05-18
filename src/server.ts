@@ -7,7 +7,7 @@ import {
 } from "./utils/question";
 import { isMainPasswordValid } from "./utils/validation";
 import { readCredentials, writeCredentials } from "./utils/credentials";
-import { connectDatabase } from "./utils/database";
+import { connectDatabase, disconnectDatabase } from "./utils/database";
 
 dotenv.config();
 console.log(process.env.MONGO_URL);
@@ -46,8 +46,10 @@ const start = async () => {
       {
         const newCredential = await askForCredential();
         await writeCredentials(newCredential);
+        console.log(newCredential);
       }
       break;
   }
+  await disconnectDatabase();
 };
 start();
