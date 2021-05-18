@@ -1,4 +1,4 @@
-// import { printPassword } from "./utils/messages";
+import dotenv from "dotenv";
 import {
   askForCredential,
   askForMainPassword,
@@ -8,7 +8,12 @@ import {
 import { isMainPasswordValid } from "./utils/validation";
 import { readCredentials, writeCredentials } from "./utils/credentials";
 
+dotenv.config();
+console.log(process.env.MONGO_URL);
+
+// const databaseURI = "mongodb+srv://mysterybox:<6AM352cNw6j6hClo>@clusterfree.8x4pd.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
 const start = async () => {
+  // await connectDatabase();
   const mainPassword = await askForMainPassword();
   if (!(await isMainPasswordValid(mainPassword))) {
     console.log("is Invalid");

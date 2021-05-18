@@ -30,6 +30,7 @@
     "vite": "^2.2.3"
   },
   "dependencies": {
+    "dotenv": "^9.0.2",
     "inquirer": "^8.0.0",
     "mongodb": "^3.6.6"
   }
