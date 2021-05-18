@@ -7,13 +7,17 @@ import {
 } from "./utils/question";
 import { isMainPasswordValid } from "./utils/validation";
 import { readCredentials, writeCredentials } from "./utils/credentials";
+import { connectDatabase } from "./utils/database";
 
 dotenv.config();
 console.log(process.env.MONGO_URL);
 
 // const databaseURI = "mongodb+srv://mysterybox:<6AM352cNw6j6hClo>@clusterfree.8x4pd.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
 const start = async () => {
-  // await connectDatabase();
+  if (process.env.MONGO_URL === undefined) {
+    throw new Error("Missing env MONGO_URL");
+  }
+  await connectDatabase(process.env.MONGO_URL);
   const mainPassword = await askForMainPassword();
   if (!(await isMainPasswordValid(mainPassword))) {
     console.log("is Invalid");
