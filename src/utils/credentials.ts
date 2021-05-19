@@ -30,10 +30,10 @@ export const selectCredential = async (): Promise<Credential> => {
   return selectedCredential;
 };
 
-export const deleteCredential = async (
-  credential: Credential
-): Promise<boolean> => {
-  const result = await getCredentialsCollection().deleteOne(credential);
+export const deleteCredential = async (service: string): Promise<boolean> => {
+  const result = await getCredentialsCollection().deleteOne({
+    service: service,
+  });
   if (result.deletedCount === undefined) {
     return false;
   }
@@ -47,4 +47,5 @@ export const writeCredentials = async (
     credential.password,
     "passwordHash"
   ).toString();
+  await getCredentialsCollection().insertOne(credential);
 };
