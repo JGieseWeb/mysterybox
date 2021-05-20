@@ -30,10 +30,10 @@ export const selectCredential = async (): Promise<Credential> => {
   return selectedCredential;
 };
 
-export const deleteCredential = async (
-  credential: Credential
-): Promise<boolean> => {
-  const result = await getCredentialsCollection().deleteOne(credential);
+export const deleteCredential = async (service: string): Promise<boolean> => {
+  const result = await getCredentialsCollection().deleteOne({
+    service: service,
+  });
   if (result.deletedCount === undefined) {
     return false;
   }
@@ -43,8 +43,21 @@ export const deleteCredential = async (
 export const writeCredentials = async (
   credential: Credential
 ): Promise<void> => {
-  credential.password = CryptoJS.AES.encrypt(
+  const encryptedPassword = CryptoJS.AES.encrypt(
     credential.password,
     "passwordHash"
   ).toString();
+  await getCredentialsCollection().insertOne({
+    ...credential,
+    password: encryptedPassword,
+  });
+};
+export const readCredential = async (service: string): Promise<Credential> => {
+  const credential = await getCredentialsCollection().findOne({
+    service,
+  });
+  if (!credential) {
+    throw new Error(`can not find the credential ${service}!`);
+  }
+  return credential;
 };
