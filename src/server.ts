@@ -5,6 +5,7 @@ import {
   deleteCredential,
   readCredentials,
   writeCredentials,
+  readCredential,
 } from "./utils/credentials";
 import { connectDatabase } from "./utils/database";
 
@@ -35,4 +36,8 @@ connectDatabase(process.env.MONGO_URL).then(() => {
   app.listen(port, () => {
     console.log(`mysterybox listening at http://localhost:${port}`);
   });
+});
+app.get("/api/credentials", async (request, response) => {
+  const credential = await readCredential(request.params.service);
+  response.json(credential);
 });
