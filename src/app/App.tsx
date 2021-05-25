@@ -1,42 +1,28 @@
-import React, { useState } from "react";
-import logo from "./logo.svg";
+import React, { useEffect, useState } from "react";
 import styles from "./App.module.css";
-
+import Credential from "./components/Credential";
+import Hero from "./components/Hero";
+import type { Credential as CredentialType } from "./../types";
 function App(): JSX.Element {
-  const [count, setCount] = useState<number>(0);
+  const [credentials, setCredentials] = useState<CredentialType[]>([]);
+
+  useEffect(() => {
+    fetch("http://localhost:5000/api/credentials")
+      .then((respone) => respone.json())
+      .then((credentials) => setCredentials(credentials));
+  }, []);
+
+  const credentialElements = credentials.map((credential) => (
+    <Credential key={credential.service} credential={credential} />
+  ));
+
   return (
     <div className={styles.App}>
-      <header className={styles["App-header"]}>
-        <img src={logo} className={styles["App-logo"]} alt="logo" />
-        <p>Hello Vite + React!</p>
-        <p>
-          <button onClick={() => setCount((count) => count + 1)}>
-            count is: {count}
-          </button>
-        </p>
-        <p>
-          Edit <code>App.tsx</code> and save to test HMR updates.
-        </p>
-        <p>
-          <a
-            className={styles["App-link"]}
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-          {" | "}
-          <a
-            className={styles["App-link"]}
-            href="https://vitejs.dev/guide/features.html"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Vite Docs
-          </a>
-        </p>
-      </header>
+      <main>
+        <Hero title="is Secret" subtitle="Password" />
+        <ul></ul>
+        <ul> {credentialElements} </ul>
+      </main>
     </div>
   );
 }

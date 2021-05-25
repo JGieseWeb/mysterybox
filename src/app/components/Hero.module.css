@@ -1,0 +1,12 @@
+.hero {
+  margin: 0;
+  background-color: rgba(204, 0, 255, 0.603);
+}
+.hero__text {
+  margin: 0;
+  font-size: 3em;
+}
+.hero__logo {
+  font-weight: bold;
+  color: red;
+}
